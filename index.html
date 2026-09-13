@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz día de las flores amarillas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+    background: #000;
+  }
+
+  /* ================= PÁGINA 1: estilo del video ================= */
+  #pagina1 {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 42%, #14100a 0%, #000000 70%);
+    transition: opacity 0.7s ease, visibility 0.7s ease;
+    overflow: hidden;
+  }
+  #pagina1.oculta { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .brillo-flotante {
+    position: absolute;
+    font-size: 1.4rem;
+    opacity: 0;
+    animation: flotar linear infinite;
+    pointer-events: none;
+    user-select: none;
+  }
+  @keyframes flotar {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(-110vh) rotate(360deg) scale(1.1); opacity: 0; }
+  }
+
+  .girasol-escena {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  .girasol-wrap {
+    position: relative;
+    font-size: 140px;
+    line-height: 1;
+    cursor: pointer;
+    animation: pulso 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 0 45px rgba(255, 205, 60, 0.95)) drop-shadow(0 0 90px rgba(255, 200, 90, 0.55));
+  }
+  @keyframes pulso {
+    0%, 100% { filter: drop-shadow(0 0 45px rgba(255, 205, 60, 0.95)) drop-shadow(0 0 90px rgba(255, 200, 90, 0.55)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 65px rgba(255, 215, 80, 1)) drop-shadow(0 0 120px rgba(255, 210, 110, 0.75)); transform: scale(1.04); }
+  }
+
+  .mano-toque {
+    position: absolute;
+    bottom: -6px;
+    right: -18px;
+    font-size: 3.2rem;
+    transform-origin: 70% 30%;
+    animation: toque 1.4s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+    z-index: 4;
+  }
+  @keyframes toque {
+    0%, 100% { transform: translate(0, 0) rotate(-8deg); opacity: 1; }
+    35%      { transform: translate(-6px, 6px) rotate(-14deg); opacity: 0.7; }
+    55%      { transform: translate(-6px, 6px) rotate(-14deg); opacity: 0.7; }
+    80%      { transform: translate(0, 0) rotate(-8deg); opacity: 1; }
+  }
+
+  .destellos-girasol {
+    position: absolute;
+    inset: -30px;
+    pointer-events: none;
+  }
+  .destello {
+    position: absolute;
+    font-size: 1rem;
+    animation: chispa 1.8s ease-in-out infinite;
+  }
+  @keyframes chispa {
+    0%, 100% { opacity: 0.15; transform: scale(0.7) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(20deg); }
+  }
+
+  .titulo-p1 {
+    margin-top: 22px;
+    color: #ffe98a;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1.55rem;
+    text-align: center;
+    z-index: 3;
+    text-shadow:
+      0 0 10px rgba(255, 226, 122, 0.9),
+      0 0 26px rgba(255, 200, 90, 0.7);
+  }
+
+  .boton-presiona {
+    margin-top: 26px;
+    border: none;
+    color: #1a1200;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+    padding: 13px 32px;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffe27a, #ffb238);
+    box-shadow: 0 8px 26px rgba(255, 178, 56, 0.55);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .boton-presiona:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(255, 178, 56, 0.65); }
+  .boton-presiona:active { transform: translateY(0px) scale(0.96); }
+
+  /* ================= PÁGINA 2: PORTAL GIRATORIO EN EL ESPACIO ================= */
+  #pagina2 {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.9s ease, visibility 0.9s ease;
+  }
+  #pagina2.visible { opacity: 1; visibility: visible; }
+
+  .fondo-espacio {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 90% 55% at 50% 58%, rgba(70,45,10,0.35), transparent 65%),
+      radial-gradient(circle at 50% 50%, #050303 0%, #000000 72%);
+  }
+  .estrellas-fijas { position: absolute; inset: 0; }
+  .estrella-fija {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: parpadeoEstrella ease-in-out infinite;
+  }
+  @keyframes parpadeoEstrella { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.9; } }
+
+  .titulo-p2 {
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    width: 92%;
+    color: #fff6c2;
+    text-align: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 6vw, 2.3rem);
+    line-height: 1.15;
+    text-shadow:
+      0 0 10px rgba(255, 226, 122, 0.95),
+      0 0 26px rgba(255, 205, 90, 0.85),
+      0 0 55px rgba(255, 180, 60, 0.6);
+  }
+
+  .escena-3d {
+    position: absolute;
+    inset: 0;
+    top: 14%;
+    perspective: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mundo-3d {
+    position: relative;
+    width: 0;
+    height: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(66deg);
+  }
+
+  /* anillo / portal central tipo Saturno */
+  .portal-anillo {
+    position: absolute;
+    top: 0; left: 0;
+    width: 210px;
+    height: 210px;
+    margin: -105px 0 0 -105px;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 50%, #fff4c4 57%, #ffdd55 65%, #ffb238 74%, transparent 80%);
+    filter: blur(1.2px);
+    box-shadow:
+      0 0 45px 14px rgba(255, 210, 70, 0.55),
+      0 0 110px 45px rgba(255, 175, 40, 0.35);
+    transform: translateZ(4px) rotateX(-66deg);
+    animation: giroAnillo 18s linear infinite, pulsoAnillo 3.2s ease-in-out infinite;
+    z-index: 30;
+  }
+  @keyframes giroAnillo { from { transform: translateZ(4px) rotateX(-66deg) rotate(0deg); } to { transform: translateZ(4px) rotateX(-66deg) rotate(360deg); } }
+  @keyframes pulsoAnillo { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+
+  .portal-nucleo {
+    position: absolute;
+    top: 0; left: 0;
+    width: 110px; height: 110px;
+    margin: -55px 0 0 -55px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 45% 40%, #241a08, #000 70%);
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
+    transform: translateZ(6px) rotateX(-66deg);
+    z-index: 31;
+  }
+
+  .anillo-guia {
+    position: absolute;
+    top: 0; left: 0;
+    border: 1px solid rgba(255, 235, 170, 0.18);
+    border-radius: 50%;
+  }
+
+  .pivote-orbita {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    transform-style: preserve-3d;
+  }
+  .brazo-item {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    transform-style: preserve-3d;
+  }
+  .item-3d {
+    position: absolute;
+    top: 0; left: 0;
+    transform-style: preserve-3d;
+  }
+  .item-contra {
+    transform: rotateX(-66deg);
+  }
+
+  .girasol-orbita {
+    display: inline-block;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6)) drop-shadow(0 0 14px rgba(255, 210, 70, 0.75));
+    animation: latido 1.7s ease-in-out infinite;
+  }
+  .frase-orbita {
+    display: inline-block;
+    white-space: nowrap;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    color: #fff6c2;
+    text-shadow:
+      0 0 8px rgba(255, 225, 120, 0.95),
+      0 0 18px rgba(255, 200, 80, 0.7);
+    animation: latido 1.7s ease-in-out infinite;
+  }
+  @keyframes latido {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.1); }
+  }
+
+  .sombra-item {
+    position: absolute;
+    top: 0; left: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,0,0,0.55), transparent 70%);
+    transform: rotateX(90deg);
+    filter: blur(2px);
+  }
+</style>
+</head>
+<body>
+
+  <!-- PÁGINA 1 -->
+  <div id="pagina1">
+    <div id="brillosContenedor"></div>
+
+    <div class="girasol-escena">
+      <div class="girasol-wrap" id="girasolBtn">
+        <div class="destellos-girasol" id="destellosGirasol"></div>
+        🌻
+      </div>
+      <div class="mano-toque">👆</div>
+    </div>
+
+    <div class="titulo-p1">Flores Amarillas para Ti ✨</div>
+    <button class="boton-presiona" id="botonPresiona">presiona aquí</button>
+  </div>
+
+  <!-- PÁGINA 2 -->
+  <div id="pagina2">
+    <div class="fondo-espacio"></div>
+    <div class="estrellas-fijas" id="estrellasFijas"></div>
+
+    <h1 class="titulo-p2">Feliz día de las Flores Amarillas 🌻</h1>
+
+    <div class="escena-3d">
+      <div class="mundo-3d" id="mundo3d">
+        <div class="portal-anillo"></div>
+        <div class="portal-nucleo"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  /* ---------- PÁGINA 1: brillos flotando de fondo ---------- */
+  const brillosContenedor = document.getElementById('brillosContenedor');
+  const emojisBrillo = ['✨', '💛', '🌼'];
+  for (let i = 0; i < 18; i++) {
+    const b = document.createElement('div');
+    b.className = 'brillo-flotante';
+    b.textContent = emojisBrillo[Math.floor(Math.random() * emojisBrillo.length)];
+    b.style.left = rand(0, 100) + 'vw';
+    b.style.fontSize = rand(0.9, 1.8) + 'rem';
+    b.style.animationDuration = rand(7, 15) + 's';
+    b.style.animationDelay = rand(0, 10) + 's';
+    brillosContenedor.appendChild(b);
+  }
+
+  const destellosGirasol = document.getElementById('destellosGirasol');
+  const emojisDestello = ['✨', '💫'];
+  for (let i = 0; i < 8; i++) {
+    const ang = (360 / 8) * i;
+    const d = document.createElement('div');
+    d.className = 'destello';
+    d.textContent = emojisDestello[i % emojisDestello.length];
+    const rad = (ang * Math.PI) / 180;
+    const x = Math.cos(rad) * 95;
+    const y = Math.sin(rad) * 95;
+    d.style.left = `calc(50% + ${x}px)`;
+    d.style.top = `calc(50% + ${y}px)`;
+    d.style.animationDelay = (i * 0.2) + 's';
+    destellosGirasol.appendChild(d);
+  }
+
+  /* ---------- Transición entre páginas ---------- */
+  const pagina1 = document.getElementById('pagina1');
+  const pagina2 = document.getElementById('pagina2');
+  document.getElementById('botonPresiona').addEventListener('click', irAPagina2);
+  document.getElementById('girasolBtn').addEventListener('click', irAPagina2);
+  function irAPagina2() {
+    pagina1.classList.add('oculta');
+    pagina2.classList.add('visible');
+  }
+
+  /* ---------- PÁGINA 2: estrellas fijas ---------- */
+  const estrellasFijas = document.getElementById('estrellasFijas');
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('div');
+    s.className = 'estrella-fija';
+    const size = rand(0.6, 2);
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = rand(0, 100) + '%';
+    s.style.top = rand(0, 100) + '%';
+    s.style.animationDuration = rand(2, 5) + 's';
+    s.style.animationDelay = rand(0, 4) + 's';
+    estrellasFijas.appendChild(s);
+  }
+
+  /* ---------- PÁGINA 2: anillos giratorios con girasoles y frases ---------- */
+  const mundo3d = document.getElementById('mundo3d');
+  const styleKeyframes = document.createElement('style');
+  document.head.appendChild(styleKeyframes);
+
+  const frases = [
+    'Sonríe siempre', 'Mi flor favorita', 'Solo para ti', 'Luz en mi vida',
+    'Un detalle amarillo', 'Flores para ti', 'Feliz día', 'Eres luz',
+    'Siempre brillas', 'Muy especial', 'Para ti', 'Eres mi sol'
+  ];
+
+  const orbitas = [
+    { radio: 90,  duracion: 16, sentido: 1,  n: 4 },
+    { radio: 150, duracion: 24, sentido: -1, n: 5 },
+    { radio: 215, duracion: 32, sentido: 1,  n: 6 },
+    { radio: 280, duracion: 40, sentido: -1, n: 7 },
+  ];
+
+  let fraseIdx = 0;
+
+  function construirOrbitas() {
+    mundo3d.querySelectorAll('.anillo-guia, .pivote-orbita').forEach(el => el.remove());
+
+    const escenaEl = document.querySelector('.escena-3d');
+    const escalaGlobal = Math.min(escenaEl.clientWidth, escenaEl.clientHeight) / 640;
+
+    orbitas.forEach((orb, idxOrb) => {
+      const radioReal = orb.radio * escalaGlobal;
+
+      const guia = document.createElement('div');
+      guia.className = 'anillo-guia';
+      guia.style.width = (radioReal * 2) + 'px';
+      guia.style.height = (radioReal * 2) + 'px';
+      guia.style.marginLeft = (-radioReal) + 'px';
+      guia.style.marginTop = (-radioReal) + 'px';
+      mundo3d.appendChild(guia);
+
+      const pivote = document.createElement('div');
+      pivote.className = 'pivote-orbita';
+      const kfNombre = `girarPivote_${idxOrb}`;
+      pivote.style.animation = `${kfNombre} ${orb.duracion}s linear infinite`;
+      mundo3d.appendChild(pivote);
+
+      styleKeyframes.appendChild(document.createTextNode(`
+        @keyframes ${kfNombre} {
+          from { transform: rotateZ(${orb.sentido === -1 ? '360deg' : '0deg'}); }
+          to   { transform: rotateZ(${orb.sentido === -1 ? '0deg' : '360deg'}); }
+        }
+      `));
+
+      for (let f = 0; f < orb.n; f++) {
+        const anguloItem = (360 / orb.n) * f + idxOrb * 17;
+
+        const brazo = document.createElement('div');
+        brazo.className = 'brazo-item';
+        brazo.style.transform = `rotateZ(${anguloItem}deg) translateX(${radioReal}px)`;
+        pivote.appendChild(brazo);
+
+        const esGirasol = (f % 2 === 0);
+        const tamBase = esGirasol ? rand(24, 34) : rand(14, 18);
+
+        // sombra
+        const sombra = document.createElement('div');
+        sombra.className = 'sombra-item';
+        const sSize = tamBase * Math.max(escalaGlobal, 0.55) * (esGirasol ? 0.9 : 2.2);
+        sombra.style.width = sSize + 'px';
+        sombra.style.height = sSize + 'px';
+        sombra.style.marginLeft = (-sSize / 2) + 'px';
+        sombra.style.marginTop = (-sSize / 2) + 'px';
+        brazo.appendChild(sombra);
+
+        const item = document.createElement('div');
+        item.className = 'item-3d';
+        item.style.transform = `translateZ(${16 + idxOrb * 4}px)`;
+
+        const contra = document.createElement('div');
+        contra.className = 'item-contra';
+
+        if (esGirasol) {
+          const g = document.createElement('span');
+          g.className = 'girasol-orbita';
+          g.textContent = '🌻';
+          g.style.fontSize = (tamBase * Math.max(escalaGlobal, 0.55)) + 'px';
+          g.style.animationDelay = (f * 0.15) + 's';
+          contra.appendChild(g);
+        } else {
+          const t = document.createElement('span');
+          t.className = 'frase-orbita';
+          t.textContent = frases[fraseIdx % frases.length];
+          fraseIdx++;
+          t.style.fontSize = (tamBase * Math.max(escalaGlobal, 0.7) * 1.6) + 'px';
+          t.style.animationDelay = (f * 0.15) + 's';
+          contra.appendChild(t);
+        }
+
+        item.appendChild(contra);
+        brazo.appendChild(item);
+      }
+    });
+  }
+
+  window.addEventListener('load', construirOrbitas);
+  window.addEventListener('resize', construirOrbitas);
+</script>
+
+</body>
+</html>
